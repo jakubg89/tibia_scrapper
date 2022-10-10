@@ -13,7 +13,7 @@ class ScrapHighscores:
         self.proxy_list = get_proxy.proxy_list()
 
         self.how_many_sites = 0
-        self.path = 'temp/0910 list.csv'
+        self.path = 'temp/0910 list.txt'
         self.column_count = 1
         self.block_first_row = 1
         self.text = ''
