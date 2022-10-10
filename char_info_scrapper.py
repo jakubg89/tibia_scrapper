@@ -1,3 +1,5 @@
+# return dict with information about character
+
 import requests
 from bs4 import BeautifulSoup
 
@@ -49,7 +51,3 @@ def get_char_info(name):
             print(key, value)
 
     return player_info
-
-x = 'Goraca'
-z = check_name(x)
-print(z['World'])
