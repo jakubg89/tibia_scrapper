@@ -10,8 +10,13 @@ def check_name(name):
     # sprawdza czy nick zawiera same litery alfabetu
     if player_name.replace(' ', '').isalpha():
         info = get_char_info(player_name)
-    # jeżeli nie to co?
-    return info
+        does_it_exist = info[1]
+        information = info[0]
+        return does_it_exist, information
+    else:
+        information = 'The name contains characters that are not allowed.'
+        does_it_exist = False
+        return does_it_exist, information
 
 
 def get_char_info(name):
@@ -25,6 +30,7 @@ def get_char_info(name):
     is_char = find_cell[0].text
     if is_char.find('does not exist') >= 0:
         player_info.update({player_name: ' does not exist.'})
+        does_it_exist = False
     else:
         raw_cells = soup.findAll('td')
         player_info_list = []
@@ -47,7 +53,10 @@ def get_char_info(name):
                 player_info.pop('Comment')
                 break
 
-        for key, value in player_info.items():
-            print(key, value)
+        # for key, value in player_info.items():
+            # print(key, value)
 
-    return player_info
+        does_it_exist = True
+
+    return player_info, does_it_exist
+
