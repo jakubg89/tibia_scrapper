@@ -1,4 +1,7 @@
 # check worlds, skills
+import requests
+from bs4 import BeautifulSoup
+from get_proxy import get_one_proxy, headers
 
 # professions
 # 1 : None
@@ -26,20 +29,17 @@
 
 
 def world():
-    worlds = ['Adra', 'Alumbra', 'Antica', 'Ardera', 'Astera', 'Axera',
-              'Bastia', 'Batabra', 'Belobra', 'Bombra', 'Bona', 'Cadebra',
-              'Calmera', 'Castela', 'Celebra', 'Celesta', 'Collabra',
-              'Damora', 'Descubra', 'Dibra', 'Epoca', 'Esmera', 'Famosa',
-              'Fera', 'Ferobra', 'Firmera', 'Gentebra', 'Gladera', 'Harmonia',
-              'Havera', 'Honbra', 'Illusera', 'Impulsa', 'Inabra', 'Issobra',
-              'Kalibra', 'Kardera', 'Karna', 'Libertabra', 'Lobera', 'Luminera',
-              'Lutabra', 'Marbera', 'Marcia', 'Menera', 'Monza', 'Mudabra',
-              'Mykera', 'Nadora', 'Nefera', 'Nossobra', 'Ocebra', 'Olima',
-              'Ombra', 'Optera', 'Ousabra', 'Pacera', 'Peloria', 'Premia',
-              'Quelibra', 'Quintera', 'Refugia', 'Reinobra', 'Seanera', 'Secura',
-              'Serdebra', 'Solidera', 'Suna', 'Syrena', 'Talera', 'Tembra',
-              'Thyria', 'Trona', 'Utobra', 'Venebra', 'Versa', 'Visabra', 'Vunira',
-              'Wintera', 'Wizera', 'Xandebra', 'Yonabra', 'Zenobra', 'Zuna', 'Zunera']
+    worlds = []
+    url = 'https://www.tibia.com/community/?subtopic=highscores'
+    request_headers = headers()
+    proxy = {
+        "http": get_one_proxy(),
+    }
+    soup = BeautifulSoup(requests.get(url, headers=request_headers, proxies=proxy).text, 'html.parser')
+    for option in soup.find_all('select', {'name': 'world'}):
+        for i in option.findAll('option'):
+            if i['value'] != '':
+                worlds.append(i['value'])
     return worlds
 
 
@@ -52,3 +52,4 @@ def category():
     # skill = [1, 2, 15, 3, 4, 5, 14, 6, 7, 8, 9, 10, 11, 12, 13]
     skill = 6
     return skill
+

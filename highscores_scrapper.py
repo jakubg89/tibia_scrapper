@@ -69,14 +69,14 @@ class ScrapHighscores:
                             self.scrap_sub_site()
 
                             sleep(round(random.uniform(0.1, 0.2), 3))
-                            #print(str(site_num) + '/' + str(self.check) + '-', end='')
-                            #print('ok ', end='')
+                            # print(str(site_num) + '/' + str(self.check) + '-', end='')
+                            # print('ok ', end='')
                             self.proxy_num += 1
                             if self.proxy_num >= len(self.proxy_list):
                                 self.proxy_num = 0
-                            #print(self.proxy_list[self.proxy_num], self.proxy_num, len(self.proxy_list))
+                            # print(self.proxy_list[self.proxy_num], self.proxy_num, len(self.proxy_list))
                             self.access2 = False
-                #print()
+                # print()
                 self.check = 0
 
     def count_sites(self):
@@ -95,11 +95,11 @@ class ScrapHighscores:
                 self.access = True
                 sleep(round(random.uniform(0.25, 0.4), 3))
                 self.proxy_num += 1
-                #print(self.proxy_num, end='')
+                # print(self.proxy_num, end='')
                 if self.proxy_num > len(self.proxy_list):
                     self.proxy_num = 0
             else:
-                #print('ok')
+                # print('ok')
                 self.access = False
                 for self.i in self.soup.findAll('span', {'class': 'PageLink'}):
                     self.how_many_sites += 1
