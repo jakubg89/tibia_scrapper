@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 from time import sleep
 import data
 import get_proxy
+import time
 
 
 class ScrapHighscores:
@@ -13,7 +14,8 @@ class ScrapHighscores:
         self.proxy_list = get_proxy.proxy_list()
 
         self.how_many_sites = 0
-        self.path = 'temp/0910 list.txt'
+        self.file_name = time.strftime('%d_%m_%Y', time.localtime())
+        self.path = 'temp/{file_name}.txt'.format(file_name=self.file_name)
         self.column_count = 1
         self.block_first_row = 1
         self.text = ''
@@ -23,7 +25,7 @@ class ScrapHighscores:
         self.proxy_num = 0
 
         for world in data.world():
-            print(world, ' ', end='')
+            # print(world, ' ', end='')
             sleep(round(random.randint(5, 20)))
             for prof in data.profession():
                 self.url = 'https://www.tibia.com/community/?subtopic=highscores&' \
@@ -32,9 +34,9 @@ class ScrapHighscores:
                             'category={category}&' \
                             'profession={prof}&' \
                             'currentpage=1'.format(world=world,
-                                                   prof=prof,
-                                                   category=category)
-                print(prof, end='')
+                                                   category=category,
+                                                   prof=prof)
+                # print(prof, end='')
                 self.check = self.count_sites() + 1
                 for site_num in range(1, self.check):
                     self.url2 = 'https://www.tibia.com/community/?subtopic=highscores&' \
@@ -42,23 +44,22 @@ class ScrapHighscores:
                                 'beprotection=-1&' \
                                 'category={category}&' \
                                 'profession={prof}&' \
-                                'currentpage={cur_page}'.format(world=world,
+                                'currentpage={site_num}'.format(world=world,
+                                                                category=category,
                                                                 prof=prof,
-                                                                cur_page=site_num,
-                                                                category=category)
+                                                                site_num=site_num)
 
                     self.access2 = True
                     while self.access2:
                         self.proxies = {
                             "http": self.proxy_list[self.proxy_num],
                         }
-                        self.soup = BeautifulSoup(requests.get(self.url2,
-                                                               headers=self.request_headers,
-                                                               proxies=self.proxies).text, 'html.parser')
+                        self.request = requests.get(self.url2,
+                                                    headers=self.request_headers,
+                                                    proxies=self.proxies)
+                        self.soup = BeautifulSoup(self.request.text, 'html.parser')
 
-                        # zmienić na sprawdzenie statusu lub wyrzucic do funkcji
-                        self.xyz = self.soup.findAll('title')[0].text
-                        if self.xyz == '403 Forbidden':
+                        if self.request.status_code == 403:
                             self.access2 = True
                             sleep(round(random.uniform(0.1, 0.2), 3))
                             self.proxy_num += 1
@@ -66,16 +67,16 @@ class ScrapHighscores:
                                 self.proxy_num = 0
                         else:
                             self.scrap_sub_site()
+
                             sleep(round(random.uniform(0.1, 0.2), 3))
-                            print(str(site_num) + '/' + str(self.check) + '-', end='')
-                            print('ok ', end='')
-                            # każde zapytanie z innego proxy z listy - w teorii
+                            #print(str(site_num) + '/' + str(self.check) + '-', end='')
+                            #print('ok ', end='')
                             self.proxy_num += 1
                             if self.proxy_num >= len(self.proxy_list):
                                 self.proxy_num = 0
-                            print(self.proxy_list[self.proxy_num], self.proxy_num, len(self.proxy_list))
+                            #print(self.proxy_list[self.proxy_num], self.proxy_num, len(self.proxy_list))
                             self.access2 = False
-                print()
+                #print()
                 self.check = 0
 
     def count_sites(self):
@@ -85,21 +86,20 @@ class ScrapHighscores:
             self.proxies = {
                 "http": self.proxy_list[self.proxy_num],
             }
-            self.soup = BeautifulSoup(requests.get(self.url,
-                                                   headers=self.request_headers,
-                                                   proxies=self.proxies).text, 'html.parser')
+            self.request = requests.get(self.url,
+                                        headers=self.request_headers,
+                                        proxies=self.proxies)
+            self.soup = BeautifulSoup(self.request.text, 'html.parser')
 
-            # zmienic na sprawdzenie statusu "odpowiedz.status_code
-            self.xyz = self.soup.findAll('title')[0].text
-            if self.xyz == '403 Forbidden':
+            if self.request.status_code == 403:
                 self.access = True
                 sleep(round(random.uniform(0.25, 0.4), 3))
                 self.proxy_num += 1
-                print(self.proxy_num, end='')
+                #print(self.proxy_num, end='')
                 if self.proxy_num > len(self.proxy_list):
                     self.proxy_num = 0
             else:
-                print('ok')
+                #print('ok')
                 self.access = False
                 for self.i in self.soup.findAll('span', {'class': 'PageLink'}):
                     self.how_many_sites += 1
@@ -138,13 +138,3 @@ class ScrapHighscores:
 
 
 ScrapHighscores()
-
-Example
-Shuffle a list (reorganize the order of the list items):
-
-import random
-
-mylist = ["apple", "banana", "cherry"]
-random.shuffle(mylist)
-
-print(mylist)

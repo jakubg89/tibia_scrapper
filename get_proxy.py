@@ -1,6 +1,5 @@
 # create proxy list
 import requests
-from bs4 import BeautifulSoup
 import pandas as pd
 import random
 
@@ -28,7 +27,7 @@ def proxy_list():
         for line in file:
             line = line.strip()
             temp_list.append(line)
-    # temp_list = [x for x in temp_list if x]
+    file.close()
     temp_list.pop()
     return temp_list
 
@@ -38,12 +37,3 @@ def get_one_proxy():
     random.shuffle(proxy)
     proxy = proxy[0]
     return proxy
-
-
-scrap_proxy()
-x = proxy_list()
-for i in x:
-    print(i)
-print(get_one_proxy())
-
-print('hello worlds')
