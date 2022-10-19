@@ -138,3 +138,13 @@ class ScrapHighscores:
 
 
 ScrapHighscores()
+
+Example
+Shuffle a list (reorganize the order of the list items):
+
+import random
+
+mylist = ["apple", "banana", "cherry"]
+random.shuffle(mylist)
+
+print(mylist)
